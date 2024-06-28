@@ -1,7 +1,7 @@
 import { ICommonObject, INode, INodeData, INodeParams, PromptTemplate } from '../../../src/Interface'
 import { getBaseClasses, getInputVariables } from '../../../src/utils'
 import { PromptTemplateInput } from '@langchain/core/prompts'
-import { parseJFBTags } from './testFJB'
+import { parseJSONEscapeTags } from './ParseJSONEsc'
 
 class CurlyPromptTemplate_Prompts implements INode {
     label: string
@@ -21,7 +21,8 @@ class CurlyPromptTemplate_Prompts implements INode {
         this.type = 'CurlyPromptTemplate'
         this.icon = 'prompt.svg'
         this.category = 'Prompts'
-        this.description = 'Schema to represent a basic prompt for an LLM'
+        this.description =
+            'Schema to represent a basic prompt for an LLM, but with the added ability to prevent JSON from being recognized as a variable.'
         this.baseClasses = [...getBaseClasses(PromptTemplate)]
         this.inputs = [
             {
@@ -45,7 +46,7 @@ class CurlyPromptTemplate_Prompts implements INode {
     async init(nodeData: INodeData): Promise<any> {
         const template = nodeData.inputs?.template as string
         const promptValuesStr = nodeData.inputs?.promptValues
-        const JFBParsedTemplate = parseJFBTags(template)
+        const JFBParsedTemplate = parseJSONEscapeTags(template)
 
         let promptValues: ICommonObject = {}
         if (promptValuesStr) {
